@@ -54,8 +54,8 @@ dsh plugin --profile web add dsh-codex-link
 需要修改插件时使用：
 
 ```sh
-git clone https://github.com/Clukay-Fun/dsh-codex-link.git
-cd dsh-codex-link
+git clone https://github.com/Clukay-Fun/dsh-gpt-link.git
+cd dsh-gpt-link
 pnpm install
 pnpm run build
 dsh plugin --profile web add "$(pwd)"

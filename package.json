@@ -6,11 +6,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Clukay-Fun/dsh-codex-link.git"
+    "url": "git+https://github.com/Clukay-Fun/dsh-gpt-link.git"
   },
-  "homepage": "https://github.com/Clukay-Fun/dsh-codex-link#readme",
+  "homepage": "https://github.com/Clukay-Fun/dsh-gpt-link#readme",
   "bugs": {
-    "url": "https://github.com/Clukay-Fun/dsh-codex-link/issues"
+    "url": "https://github.com/Clukay-Fun/dsh-gpt-link/issues"
   },
   "type": "module",
   "engines": {
