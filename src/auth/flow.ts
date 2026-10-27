@@ -106,8 +106,9 @@ export interface LoginOptions {
  * and a popup without one is blocked.
  */
 export async function openSystemBrowser(url: string): Promise<void> {
-  const command = process.platform === 'darwin' ? '/usr/bin/open' : process.platform === 'win32' ? 'cmd' : 'xdg-open'
-  const args = process.platform === 'win32' ? ['/c', 'start', '', url] : [url]
+  // Not `cmd /c start`: cmd would read the query string's `&` as a command separator.
+  const command = process.platform === 'darwin' ? '/usr/bin/open' : process.platform === 'win32' ? 'rundll32' : 'xdg-open'
+  const args = process.platform === 'win32' ? ['url.dll,FileProtocolHandler', url] : [url]
   await new Promise<void>((resolve, reject) => {
     const child = spawn(command, args, { stdio: 'ignore' })
     child.once('error', reject)
@@ -118,10 +119,17 @@ export async function openSystemBrowser(url: string): Promise<void> {
   })
 }
 
-/** Only a web page is handed to the OS opener; anything else stays a link to click. */
-function openable(url: string): boolean {
+/** Every page pi-ai's Codex flow announces lives on this origin. */
+export const ISSUER_ORIGIN = 'https://auth.openai.com'
+
+/**
+ * Only the issuer's own pages are opened or passed to the settings page as a link. The
+ * notice comes from pi-ai, so this is a second fence: anything else is dropped, not shown.
+ */
+function issuerPage(url: string | undefined): url is string {
+  if (url === undefined) return false
   try {
-    return new URL(url).protocol === 'https:'
+    return new URL(url).origin === ISSUER_ORIGIN
   } catch {
     return false
   }
@@ -254,7 +262,7 @@ export class CodexLogin {
           notify: (notice) => {
             this.notice = {
               message: notice.message,
-              ...notice.url === undefined ? {} : { url: notice.url },
+              ...issuerPage(notice.url) ? { url: notice.url } : {},
               ...notice.code === undefined ? {} : { code: notice.code },
             }
             this.openPage(notice.url)
@@ -275,7 +283,7 @@ export class CodexLogin {
    * is what the person would fall back to anyway, so it is logged and not raised.
    */
   private openPage(url: string | undefined): void {
-    if (url === undefined || !openable(url) || this.opened.has(url)) return
+    if (!issuerPage(url) || this.opened.has(url)) return
     this.opened.add(url)
     this.openBrowser(url).catch(() => {
       this.options.logger?.warn('dsh-codex-link: could not open the system browser')

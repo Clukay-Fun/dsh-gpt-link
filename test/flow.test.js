@@ -295,3 +295,17 @@ test('a new attempt may open the same page again', async () => {
   finish('cancelled')
   await tick()
 })
+
+test('a page off the issuer origin is neither opened nor shown as a link', async () => {
+  const { login, state, finish } = harness()
+  await login.start()
+  for (const url of ['javascript:alert(1)', 'http://auth.openai.com/x', 'https://auth.openai.com.evil.test/x', 'file:///etc/passwd']) {
+    state.interaction.notify({ message: 'open', url })
+    const view = await login.status()
+    assert.equal(view.notice.url, undefined)
+    assert.equal(view.notice.message, 'open')
+  }
+  assert.deepEqual(state.opened, [])
+  finish('cancelled')
+  await tick()
+})
