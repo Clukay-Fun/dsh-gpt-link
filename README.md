@@ -21,7 +21,7 @@ kind: "package-reference"
 
 - **登录**：设置 → ChatGPT Link → 用 ChatGPT 登录。系统浏览器会自动打开授权页，授权完成后回到 DSH 即可。浏览器没有自动返回时，可以把地址栏中的完整地址粘贴回设置页。
 - **退出**：设置 → ChatGPT Link → 退出登录。除删除本机登录外，还会结束 OpenAI 上的这次会话，ChatGPT「活动会话」里不会留下多余的设备。
-- **模型**：在模型选择器里选择 GPT 模型，依次为 GPT-6 Astra、GPT-6.1 Sol、GPT-6 Sol、GPT-6 Luna、GPT-5.6 Sol、GPT-5.6 Terra、GPT-5.6 Luna。所有模型统一提供 Low、Medium、High、Xhigh 四档推理等级，默认 Low。
+- **模型**：在模型选择器里选择 GPT 模型，依次为 GPT-6 Astra、GPT-6.1 Sol、GPT-6 Sol、GPT-6 Luna、GPT-5.6 Sol、GPT-5.6 Terra、GPT-5.6 Luna。所有模型统一提供 Low、Medium、High、Xhigh 四档推理等级，默认 Low。未登录时这些模型不会出现在选择器里，登录后自动出现。
 - **额度**：设置 → ChatGPT Link 显示 5 小时窗口和每周窗口的已用百分比、进度条与重置时间，用到 90% 以上会标红，额度用尽时会标出。
 
 ## 安装

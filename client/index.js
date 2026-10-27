@@ -255,6 +255,16 @@ window.__ModuleLoader__.load({
       return plan ? plan.charAt(0).toUpperCase() + plan.slice(1) : null
     }
 
+    async function getAuth() {
+      const response = await fetch('/api/codex-auth', {
+        cache: 'no-store',
+        credentials: 'same-origin',
+        headers: { accept: 'application/json' },
+      })
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      return response.json()
+    }
+
     async function postAuth(body) {
       const response = await fetch('/api/codex-auth', {
         method: 'POST',
@@ -521,18 +531,17 @@ window.__ModuleLoader__.load({
       }, [])
 
       const loadAuth = React.useCallback(async () => {
-        const response = await fetch('/api/codex-auth', {
-          cache: 'no-store',
-          credentials: 'same-origin',
-          headers: { accept: 'application/json' },
-        })
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        setAuth(await response.json())
+        setAuth(await getAuth())
       }, [])
 
       React.useEffect(() => {
         void loadAuth().catch(() => {})
       }, [loadAuth])
+
+      // Signing in or out here shows or hides the picker's GPT models at once.
+      React.useEffect(() => {
+        if (auth?.status) modelGate.report(auth.status)
+      }, [auth?.status])
 
       // An attempt waits on a browser, so the only way this transport learns it finished is
       // to ask. Polling stops as soon as the attempt settles.
@@ -614,12 +623,54 @@ window.__ModuleLoader__.load({
       }
     }
 
+    // The picker labels every model with its route, and groups each route under one section.
+    const pickerCss = `
+section[data-menu-group]:has([role="menuitemradio"] [data-provider-id="openai-codex"]),
+[role="menuitemradio"]:has([data-provider-id="openai-codex"]){display:none}
+`
+
+    /** Where the latest sign-in status goes; a no-op until the picker gate is running. */
+    const modelGate = { report: () => {} }
+
+    /**
+     * Hide the GPT models from the picker while no ChatGPT account is signed in.
+     *
+     * The host lists every configured route whether or not it can authenticate, and offers no
+     * way to filter the list, so a signed-out picker still offered models that only fail. The
+     * hiding is CSS keyed on the picker's own `data-provider-id`, toggled through `media`.
+     * Status is read at start and on window focus, and the settings page reports changes as
+     * they happen. An unreadable status hides nothing, so a broken request never takes away
+     * models that work; and if the picker's markup changes, the models simply show again.
+     */
+    function hideSignedOutModels() {
+      const style = document.createElement('style')
+      style.textContent = pickerCss
+      style.media = 'not all'
+      document.head.appendChild(style)
+      modelGate.report = (status) => {
+        style.media = status === 'signed-in' ? 'not all' : 'all'
+      }
+      const check = () => {
+        getAuth().then((view) => {
+          if (typeof view?.status === 'string') modelGate.report(view.status)
+        }, () => {})
+      }
+      window.addEventListener('focus', check)
+      check()
+      return () => {
+        window.removeEventListener('focus', check)
+        modelGate.report = () => {}
+        style.remove()
+      }
+    }
+
     return {
       inject: ['slots', 'locale'],
       apply(ctx) {
         ctx.effect(() => ctx.locale.register(NS, copy), 'dsh-codex-link: locale')
         const t = ctx.locale.bind(NS)
         ctx.effect(() => markNavEntry(() => t('nav')), 'dsh-codex-link: nav icon')
+        ctx.effect(() => hideSignedOutModels(), 'dsh-codex-link: picker gate')
         ctx.slots.inject('settings.section', () => ctx.slots.register({
           name: 'settings.section',
           id: 'codex-link',
