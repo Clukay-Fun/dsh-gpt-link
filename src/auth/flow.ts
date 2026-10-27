@@ -9,7 +9,7 @@
  * Nothing here handles a token. `commit` belongs to pi-ai's flow, so the grant this plugin
  * later reads for the quota card is written by the same code that answers prompts.
  *
- * @module dsh-codex-link/flow
+ * @module dsh-gpt-link/flow
  */
 
 import { spawn } from 'node:child_process'
@@ -272,7 +272,7 @@ export class CodexLogin {
       })
       this.outcome = result.status === 'authorized' ? null : 'cancelled'
     } catch (error) {
-      this.options.logger?.warn(`dsh-codex-link: codex sign-in ${errorCode(error)}`)
+      this.options.logger?.warn(`dsh-gpt-link: codex sign-in ${errorCode(error)}`)
       this.outcome = 'failed'
       this.code = errorCode(error)
     }
@@ -286,7 +286,7 @@ export class CodexLogin {
     if (!issuerPage(url) || this.opened.has(url)) return
     this.opened.add(url)
     this.openBrowser(url).catch(() => {
-      this.options.logger?.warn('dsh-codex-link: could not open the system browser')
+      this.options.logger?.warn('dsh-gpt-link: could not open the system browser')
     })
   }
 
@@ -359,12 +359,12 @@ export class CodexLogin {
     }
     if (grant !== null) {
       this.revoked = await (this.options.revoke ?? revokeGrant)(grant)
-      if (!this.revoked) this.options.logger?.warn('dsh-codex-link: codex sign-out could not revoke the session')
+      if (!this.revoked) this.options.logger?.warn('dsh-gpt-link: codex sign-out could not revoke the session')
     }
     try {
       await this.options.credentials.deleteRecord(PI_AI_RECORD_KEY)
     } catch (error) {
-      this.options.logger?.warn(`dsh-codex-link: codex sign-out ${errorCode(error)}`)
+      this.options.logger?.warn(`dsh-gpt-link: codex sign-out ${errorCode(error)}`)
       this.signOutFailed = true
       this.code = 'logout-failed'
     }

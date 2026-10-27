@@ -1,5 +1,5 @@
 {
-  "name": "dsh-codex-link",
+  "name": "dsh-gpt-link",
   "version": "0.2.0",
   "description": "DeepSeek Harness plugin: sign in with ChatGPT to use GPT models through DSH's bundled pi-ai Codex route, and see that account's quota.",
   "author": "Clukay-Fun",

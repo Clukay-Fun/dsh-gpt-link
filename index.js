@@ -1,7 +1,7 @@
 import { CodexLogin } from './lib/auth/flow.js'
 import { QuotaReader } from './lib/service.js'
 
-export const name = 'dsh-codex-link'
+export const name = 'dsh-gpt-link'
 export const inject = ['connection', 'credentials', 'authorization']
 
 const QUOTA_PATH = '/api/codex-quota'
@@ -46,7 +46,7 @@ export function apply(ctx, config = {}) {
   ctx.effect(() => () => {
     reader.dispose()
     login.dispose()
-  }, 'dsh-codex-link: stop')
+  }, 'dsh-gpt-link: stop')
 
   ctx.connection.fetch.register({
     path: AUTH_PATH,

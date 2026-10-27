@@ -1,7 +1,7 @@
 # Host row. The same package also ships the settings-page client.
 - insert:
     - id: codex-link
-      name: dsh-codex-link
+      name: dsh-gpt-link
 
 # Activate the Codex route on the bundled pi-ai adapter. `dsh-base` already
 # mounts `llm-pi-ai`, but with no providers, so nothing is served. A keyless

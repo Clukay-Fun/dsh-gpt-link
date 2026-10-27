@@ -1,9 +1,9 @@
 window.__ModuleLoader__.load({
-  id: 'dsh-codex-link',
+  id: 'dsh-gpt-link',
   factory(require) {
     const React = require('react')
     const h = React.createElement
-    const NS = 'dsh-codex-link'
+    const NS = 'dsh-gpt-link'
 
     const copy = {
       zh: {
@@ -667,10 +667,10 @@ section[data-menu-group]:has([role="menuitemradio"] [data-provider-id="openai-co
     return {
       inject: ['slots', 'locale'],
       apply(ctx) {
-        ctx.effect(() => ctx.locale.register(NS, copy), 'dsh-codex-link: locale')
+        ctx.effect(() => ctx.locale.register(NS, copy), 'dsh-gpt-link: locale')
         const t = ctx.locale.bind(NS)
-        ctx.effect(() => markNavEntry(() => t('nav')), 'dsh-codex-link: nav icon')
-        ctx.effect(() => hideSignedOutModels(), 'dsh-codex-link: picker gate')
+        ctx.effect(() => markNavEntry(() => t('nav')), 'dsh-gpt-link: nav icon')
+        ctx.effect(() => hideSignedOutModels(), 'dsh-gpt-link: picker gate')
         ctx.slots.inject('settings.section', () => ctx.slots.register({
           name: 'settings.section',
           id: 'codex-link',

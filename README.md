@@ -9,7 +9,7 @@ kind: "package-reference"
 
 <h1 align="center">ChatGPT Link</h1>
 
-<p align="center">包名 <code>dsh-codex-link</code> · 版本 <code>0.2.0</code> · DeepSeek Harness 插件</p>
+<p align="center">包名 <code>dsh-gpt-link</code> · 版本 <code>0.2.0</code> · DeepSeek Harness 插件</p>
 
 ## 概述
 
@@ -30,7 +30,7 @@ kind: "package-reference"
 
 ### 从插件市场安装
 
-在 DSH 的插件市场搜索 **dsh-codex-link** 或 **ChatGPT Link**，点安装，重启 DSH Desktop。
+在 DSH 的插件市场搜索 **dsh-gpt-link** 或 **ChatGPT Link**，点安装，重启 DSH Desktop。
 
 ### 用命令安装
 
@@ -44,7 +44,7 @@ export PATH="$CLI_BIN:$PATH"
 从 npm 安装到 profile（以 Desktop 默认的 `web` 为例）：
 
 ```sh
-dsh plugin --profile web add dsh-codex-link
+dsh plugin --profile web add dsh-gpt-link
 ```
 
 重启 DSH Desktop，在设置中打开 **ChatGPT Link** 完成登录。
@@ -88,7 +88,7 @@ dsh --profile web --dump-config | grep -A 4 "openai-codex:"
 从插件市场安装的，在市场里点更新。从 npm 安装的：
 
 ```sh
-dsh plugin --profile web update dsh-codex-link
+dsh plugin --profile web update dsh-gpt-link
 ```
 
 从源码安装的，拉取并重新构建即可，无需重新添加：
@@ -104,7 +104,7 @@ pnpm run build
 ### 卸载
 
 ```sh
-dsh plugin --profile web remove dsh-codex-link
+dsh plugin --profile web remove dsh-gpt-link
 ```
 
 卸载插件不会删除 pi-ai 保存的登录。如需退出登录，请在卸载前到设置 → ChatGPT Link 点击「退出登录」。

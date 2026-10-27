@@ -16,7 +16,7 @@ export const USAGE_URL = 'https://chatgpt.com/backend-api/wham/usage'
  * How this plugin names itself to the backend. pi-ai sends `pi`; neither of us claims to
  * be the Codex CLI, because the header is an attribution field, not a capability.
  */
-export const ORIGINATOR = 'dsh-codex-link'
+export const ORIGINATOR = 'dsh-gpt-link'
 
 export type UsageFailure = 'auth' | 'blocked' | 'rate-limit' | 'server' | 'network' | 'payload'
 

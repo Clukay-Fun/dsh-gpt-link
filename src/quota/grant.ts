@@ -5,7 +5,7 @@
  * its own. It reads the record pi-ai's ChatGPT sign-in writes, and only reads it: refresh
  * and rotation stay with pi-ai, which runs them inside the credential store's `modify`.
  *
- * @module dsh-codex-link/grant
+ * @module dsh-gpt-link/grant
  */
 
 /** pi-ai's record address: its own plugin name, then the provider route key. */
