@@ -121,3 +121,10 @@ dsh plugin --profile web remove dsh-codex-link
 | `locale/` | 插件名称与简介的中英文 |
 | `scripts/check-contract.mjs` | 核对已安装的 pi-ai 是否仍符合插件依赖的约定 |
 | `test/` | 测试，`pnpm test` 运行 |
+| `.github/workflows/publish.yml` | 推送版本标签时自动发布到 npm |
+
+## 发布新版本
+
+1. 修改 `package.json` 的版本号和 README 顶部的版本，运行 `pnpm run build`，把 `lib/` 一并提交。
+2. 合并到 `main` 后打标签并推送，例如 `git tag v0.2.1 && git push origin v0.2.1`。
+3. GitHub Actions 会核对标签与版本号一致、重新构建并运行测试，然后通过 npm Trusted Publishing 发布，不需要令牌或验证码。

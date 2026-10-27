@@ -1,0 +1,46 @@
+# Publish to npm when a version tag (v0.2.1, ...) is pushed. No token: npm trusts this
+# workflow through Trusted Publishing (OIDC), configured on the package's npm settings
+# page with this file's name, and adds a provenance statement to each release.
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      # Trusted Publishing needs npm 11.5.1 or later.
+      - run: npm install -g npm@^11.5.1
+
+      - name: Tag matches package.json
+        run: |
+          version=$(node -p "require('./package.json').version")
+          test "v$version" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME does not match package.json $version"; exit 1; }
+
+      - run: pnpm install --frozen-lockfile
+
+      # Builds lib/ and runs the tests. The contract check skips here: DSH Desktop is not installed.
+      - run: pnpm test
+
+      # lib/ is committed for git installs, so a release must not ship a stale build.
+      - name: Committed lib/ matches src/
+        run: git diff --exit-code -- lib
+
+      - run: npm publish --access public
