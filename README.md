@@ -24,6 +24,14 @@ kind: "package-reference"
 - **模型**：在模型选择器里选择 GPT 模型，依次为 GPT-6 Astra、GPT-6.1 Sol、GPT-6 Sol、GPT-6 Luna、GPT-5.6 Sol、GPT-5.6 Terra、GPT-5.6 Luna。所有模型统一提供 Low、Medium、High、Xhigh 四档推理等级，默认 Low。未登录时这些模型不会出现在选择器里，登录后自动出现。
 - **额度**：设置 → ChatGPT Link 显示 5 小时窗口和每周窗口的已用百分比、进度条与重置时间，用到 90% 以上会标红，额度用尽时会标出。
 
+## 截图
+
+| 未登录 | 已登录，显示额度 |
+|---|---|
+| ![未登录的设置页](docs/screenshots/signed-out.png) | ![已登录的设置页与额度](docs/screenshots/signed-in.png) |
+| **模型选择器** | **用 GPT 模型对话** |
+| ![模型选择器中的 GPT 模型](docs/screenshots/model-picker.png) | ![用 GPT-6 Astra 对话](docs/screenshots/chat.png) |
+
 ## 安装
 
 需要 macOS 上的 DSH Desktop，内置 `@deepseek-ai/dsh` 版本为 `>=0.2.1-rc.2 <0.3.0`。
@@ -101,6 +109,10 @@ pnpm run build
 
 然后重启 DSH Desktop。
 
+### OpenAI 推出新模型时
+
+模型列表写在插件的 `cordis.patch.yml` 里，模型的接口地址和上下文长度则来自 DSH Desktop 自带的 pi-ai 模型目录。新模型要出现在选择器里，两边都要更新：先等 DSH Desktop 更新到目录里有这个模型的版本，再等插件发布加入它的新版本，然后在插件市场点更新。
+
 ### 卸载
 
 ```sh
@@ -118,6 +130,7 @@ dsh plugin --profile web remove dsh-gpt-link
 | `src/` | 后端源码（TypeScript），构建到 `lib/` |
 | `cordis.patch.yml` | `openai-codex` 路由、模型列表与推理等级 |
 | `assets/icon.svg` | 插件图标 |
+| `docs/screenshots/` | README 中的截图，不随 npm 包发布 |
 | `locale/` | 插件名称与简介的中英文 |
 | `scripts/check-contract.mjs` | 核对已安装的 pi-ai 是否仍符合插件依赖的约定 |
 | `test/` | 测试，`pnpm test` 运行 |
@@ -128,3 +141,5 @@ dsh plugin --profile web remove dsh-gpt-link
 1. 修改 `package.json` 的版本号和 README 顶部的版本，运行 `pnpm run build`，把 `lib/` 一并提交。
 2. 合并到 `main` 后打标签并推送，例如 `git tag v0.2.1 && git push origin v0.2.1`。
 3. GitHub Actions 会核对标签与版本号一致、重新构建并运行测试，然后通过 npm Trusted Publishing 发布，不需要令牌或验证码。
+
+加入新模型时，在 `cordis.patch.yml` 的 `models` 里按选择器顺序加一行，同步更新上文「模型」一段，再在装有新版 DSH Desktop 的机器上运行 `pnpm test`：`scripts/check-contract.mjs` 会核对本机的模型目录里确实有这个 id。
